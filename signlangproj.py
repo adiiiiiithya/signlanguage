@@ -13,14 +13,14 @@ with mp_hands.Hands(min_detection_confidence=0.5, min_tracking_confidence=0.5) a
         if not ret:
             break
 
-        frame_rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)  # Convert to RGB for Mediapipe
-        results = hands.process(frame_rgb)  # Detect hands
+        frame_rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)  #convert2rgb
+        results = hands.process(frame_rgb)  #detectionofhand
 
-        if results.multi_hand_landmarks:  # If hands are detected
+        if results.multi_hand_landmarks:  
             for hand_landmarks in results.multi_hand_landmarks:
-                mp_draw.draw_landmarks(frame, hand_landmarks, mp_hands.HAND_CONNECTIONS)
+                mp_draw.draw_landmarks(frame, hand_landmarks, mp_hands.HAND_CONNECTIONS) #drawsonhandinrealtime
 
-                # Get landmark positions
+                #thumb4index8middle12ring16pinky20wrist0
                 thumb_tip = hand_landmarks.landmark[4]
                 index_tip = hand_landmarks.landmark[8]
                 middle_tip = hand_landmarks.landmark[12]
@@ -28,10 +28,10 @@ with mp_hands.Hands(min_detection_confidence=0.5, min_tracking_confidence=0.5) a
                 pinky_tip = hand_landmarks.landmark[20]
                 wrist = hand_landmarks.landmark[0]
 
-                # Gesture recognition
-                gesture = "Unknown"
+                
+                gesture = "Unknown" #default
 
-                # Open Hand (All fingers extended)
+                #lowerymeanshigherup
                 if (
                     index_tip.y < hand_landmarks.landmark[6].y and
                     middle_tip.y < hand_landmarks.landmark[10].y and
@@ -40,7 +40,7 @@ with mp_hands.Hands(min_detection_confidence=0.5, min_tracking_confidence=0.5) a
                 ):
                     gesture = "Open Hand"
 
-                # Thumbs Up (Thumb extended, other fingers folded)
+            
                 elif (
                     thumb_tip.y < wrist.y and
                     index_tip.y > hand_landmarks.landmark[6].y and
@@ -50,7 +50,7 @@ with mp_hands.Hands(min_detection_confidence=0.5, min_tracking_confidence=0.5) a
                 ):
                     gesture = "Thumbs Up"
 
-                # "I Love You" Gesture (Thumb, Index, and Pinky extended)
+                #iloveyou
                 elif (
                     thumb_tip.y < wrist.y and
                     index_tip.y < hand_landmarks.landmark[6].y and
